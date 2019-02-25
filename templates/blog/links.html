@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>OneDeive外链工具</title>
+    <meta property="og:site_name" content="ZLOE"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:description" content="ZLOE:OneDeive外链工具"/>
+    <meta property="og:url" content="https://zhang18.top"/>
+    <meta name="description" content="ZLOE:OneDeive外链工具"/>
+    <meta name="keywords" content="ZLOE,OneDeive外链工具"/>
+    <meta name="template" content="Mirages"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/xcConfirm.css">
+    <link rel="icon" type="image/png" href="//wx1.sinaimg.cn/large/006gFOhdly1fr0hdrzlolj30b40b4dg7.jpg">
+
+    <style>
+        #id_text, #get_text {
+            width: 100%;
+            height: 300px;
+            border-radius: 0.5125rem;
+            border-width: 2px;
+            border-color: black;
+            padding: 10px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .comment-btn {
+            border: 1px solid rgb(206, 212, 218);
+            display: inline-block;
+            padding: .438rem .525rem;
+            border: 0;
+            border-radius: 0.5125rem;
+            background: rgb(255, 255, 255);
+            color: rgb(0, 0, 0);
+            overflow-y: visible;
+            margin-top: .625rem;
+            width: 100%;
+            vertical-align: top;
+            border-style: solid;
+            border-width: 2px;
+            font-size: 16px;
+        }
+
+        #get_text {
+            margin-top: 30px;
+
+        }
+
+        .footer {
+            color: rgb(119, 119, 119);
+            background-color: #000000;
+            padding: 20px 0;
+            border-top: 1px solid rgb(229, 229, 229);
+            margin-top: 70px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="req">
+    <div class="container">
+        <div class="head">
+            <h1>OneDeive外链工具</h1>
+            <p style="text-align: center">文件共享---->复制链接---->复制---->贴进来---->生成外链</p>
+        </div>
+        <div class="row">
+            <div class="col-md-1">
+            </div>
+            <div class="col-md-10">
+                <div class="cul">
+                    <textarea name="text" rows="10" id="id_text" cols="60" required="" ></textarea>
+                    <button type="submit" onclick="get_curl_data()" class="comment-btn"
+                            style="background-color: black;color: #ffffff">提交！
+                    </button>
+                    <h1 id="codes">分享链接</h1>
+                    <textarea name="text" rows="10" id="get_text" cols="60" required=""></textarea>
+                    <button type="submit" class="comment-btn" onclick="get_copy()"
+                            style="background-color: black;color: #ffffff">复制！
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-1">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function get_curl_data() {
+        var u = $('#id_text').val();
+        var data_list = u.split("/");
+        data_url = 'https://' + data_list[2] + '/' + data_list[5] + '/' + data_list[6] + '/' + '_layouts/download.aspx?' + data_list[7].split('?')[1] + '&share=' + data_list[7].split('?')[0];
+        $('#get_text').val(data_url)
+
+
+    }
+
+    function get_copy() {
+        var data = $('#get_text').val()
+        clipboard.writeText(data);
+        console.log("复制成功！")
+
+    }
+
+
+</script>
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+<script src="https://garron.net/code/clipboard-polyfill/build/clipboard-polyfill.promise.js"></script>
+<script src="/static/js/xcConfirm.js"></script>
+<!-- 谷歌统计代码Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-121174643-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-121174643-1');
+</script>
+<div class="footer">
+    <p style="text-align: center;font-size: 15px;color: white">@2018-4-22 黔ICP备18003909号</p>
+</div>
+</body>
+</html>

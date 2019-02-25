@@ -1,0 +1,41 @@
+{% include 'base1.html' %}
+<div class="contents">
+        <h2 class="tie">欢迎老铁添加友链，先添加本站，老铁我审核过后发布：</h2>
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="frendss" style="">
+                <fieldset class="module aligned ">
+                    <div class="form-row field-name">
+                        <div>
+                            <label class="required" for="{{ form.name.id_for_label }}">网站名字:</label>
+                            {{ form.name }}
+                            {{ form.name.errors }}
+                        </div>
+                    </div>
+                    <div class="form-row field-head">
+                        <div>
+                            <label class="required" for="{{ form.head.id_for_label }}">头像链接:</label>
+                            {{ form.head }}
+                            {{ form.head.errors }}
+                        </div>
+                    </div>
+                    <div class="form-row field-url">
+                        <div>
+                            <label class="required" for="{{ form.url.id_for_label }}">网站链接:</label>
+                            {{ form.url }}
+                            {{ form.url.errors }}
+                        </div>
+                    </div>
+                    <div class="form-row field-text">
+                        <div>
+                            <label class="required" for="{{ form.text.id_for_label }}">网站介绍:</label>
+                            {{ form.text }}
+                            {{ form.text.errors }}
+                        </div>
+                    </div>
+                </fieldset>
+                <button type="submit" class="comment-btn" style="background-color: black;color: #ffffff">提交！</button>
+            </div>
+        </form>
+</div>
+{% include 'base2.html' %}

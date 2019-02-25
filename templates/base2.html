@@ -1,0 +1,58 @@
+<ol class="page-navigator">
+    {% if context.has_previous %}
+        <a class="btn btn-primary prev" href="?page={{ context.previous_page_number }}"
+        >上一页</a>
+    {% endif %}
+    <li><span></span></li>
+    {% if context.has_next %}
+        <a class="btn btn-primary next" href="?page={{ context.next_page_number }}">下一页</a>
+    {% endif %}
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<footer id="footer" role="contentinfo" style="background-color: #1e1e1f;">
+    <p id="span_dt_dt" style="text-align: center;color:white;height: 30px;font-size: 18px; margin-top: 10px;">@2018-4-22
+        黔ICP备18003909号</p>
+    <script src="/static/js/jquery.min.js" type="text/javascript"></script>
+    <script src="/static/js/skin.js" type="text/javascript"></script>
+    <script src="/static/js/biao.js" type="text/javascript"></script>
+    {#    <script src="/static/js/adjj.js" type="text/javascript"></script>#}
+    <script src="https://cdn.bootcss.com/zooming/2.1.0/zooming.js"></script>
+    <script type="text/javascript">
+        $(".lazy").lazyload();
+
+        (function ($) {
+            hljs.initHighlightingOnLoad();
+        })(jQuery);
+
+        //图片查看
+        document.addEventListener('DOMContentLoaded', function () {
+            const zooming = new Zooming({
+                customSize: '30%'
+
+            });
+            zooming.listen('img');
+        })
+    </script>
+    </div>
+</footer>
+
+<!-- 谷歌统计代码Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-121174643-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-121174643-1');
+</script>
+
+</body>
+</html>

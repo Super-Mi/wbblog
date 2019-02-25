@@ -1,0 +1,109 @@
+body, html {
+    font-size: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+/* Reset */
+*,
+*:after,
+*:before {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+/* Clearfix hack by Nicolas Gallagher: http://nicolasgallagher.com/micro-clearfix-hack/ */
+.clearfix:before,
+.clearfix:after {
+    content: " ";
+    display: table;
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+
+
+/* Header */
+.header {
+    padding: 1em 190px 1em;
+    letter-spacing: -1px;
+    text-align: center;
+}
+
+.header h1 {
+    color: #D5D6E2;
+    font-weight: 600;
+    font-size: 2em;
+    line-height: 1;
+    margin-bottom: 0;
+}
+
+.header h1 span {
+    display: block;
+    font-size: 60%;
+    font-weight: 400;
+    padding: 0.8em 0 0.5em 0;
+    color: #c3c8cd;
+}
+
+a#toggle-side {
+    top: .625rem;
+    left: .625rem;
+    font-size: .75rem;
+    position: fixed;
+    z-index: 899;
+    padding: .125rem 1.25rem;
+    color: #333;
+    background-color: rgba(255, 255, 255, 0.9);
+    cursor: pointer;
+    line-height: 1.875rem;
+    border-radius: 2.5rem;
+    /*font-family: "Open Sans", Helvetica, "Microsoft Yahei", sans-serif;*/
+    font-weight: 300;
+    -webkit-transition: .5s ease all;
+    -moz-transition: .5s ease all;
+    -ms-transition: .5s ease all;
+    -o-transition: .5s ease all;
+    transition: .5s ease all;
+    -webkit-box-shadow: 0 .125rem .3125rem rgba(0, 0, 0, 0.117);
+    -moz-box-shadow: 0 .125rem .3125rem rgba(0, 0, 0, 0.117);
+    box-shadow: 0 .125rem .3125rem rgba(0, 0, 0, 0.117);
+}
+
+
+/*ZLOE后加*/
+
+.dao{
+    position: relative;
+    left: 95px;
+}
+
+
+element.style {
+    background-image: url(https://ws1.sinaimg.cn/large/6f8a2832gy1frq710u15jj22yo1o0e81.jpg);
+}
+.blog-background {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    position: absolute;
+    left: 0;
+    top: 0;
+    overflow: hidden;
+    opacity: 1;
+    -webkit-transition: 1s ease opacity;
+    -moz-transition: 1s ease opacity;
+    -ms-transition: 1s ease opacity;
+    -o-transition: 1s ease opacity;
+    transition: 1s ease opacity;
+    padding: 10rem 1rem;
+    width: 100%;
+    color: rgb(238, 238, 238);
+    text-align: center;
+}

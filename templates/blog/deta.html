@@ -1,0 +1,284 @@
+<!DOCTYPE HTML>
+<html class="no-js" lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ text.title }}</title>
+    <meta property="og:title" content="{{ text.title }}"/>
+    <meta property="og:site_name" content="ZLOE"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:description" content="{{ chrom }}..."/>
+    <meta property="og:url" content="https://zhang18.top/program/{{ text.id }}.html"/>
+    <meta property="article:published_time" content="{{ text.input_time }}"/>
+    <meta property="article:modified_time" content="{{ text.input_time }}"/>
+    <meta name="twitter:title" content="{{ text.title }}"/>
+    <meta name="twitter:description" content="{{ chrom }}..."/>
+    <meta name="twitter:card" content="summary"/>
+    <meta name="description" content="{{ chrom }}..."/>
+    <meta name="keywords" content="教程"/>
+    <meta name="template" content="Mirages"/>
+    {% include 'base1.html' %}
+    <link rel="stylesheet" href="/static/css/simditor.css">
+    <style>
+        p.name {
+            position: relative;
+            top: -70px;
+            left: 60px;
+        }
+
+        p.liutext {
+            margin-bottom: 5px;
+        }
+
+        img {
+            border: 0;
+            max-width: 100%;
+            margin: 1.25rem auto
+        }
+
+        p.liutext, .comment_text {
+            margin-top: -60px;
+            margin-left: 55px;
+        }
+
+        a.id {
+            margin-top: -40px;
+            margin-left: 55px;
+        }
+
+        #header-img {
+            margin-top: -3px;
+        }
+    </style>
+    <script src="/static/js/highlight.min.js"></script>
+    <div class="header-text">
+        <div class="titles">
+            <hr>
+            <h1 class="wen_title">{{ text.title }}</h1>
+            <p class="label label-importan"> • 时间：{{ text.input_time }} • 阅读：{{ text.views }}</p>
+            <hr>
+        </div>
+        <div class="content" style="">
+            <p>{{ text.body_text | safe }}</p>
+
+        </div>
+        {#打赏#}
+        <div class="san">
+            <p><a href="javascript:void(0)" onClick="dashangToggle()" class="dashang" title="打赏，支持一下">打赏</a></p>
+            <div class="hide_box"></div>
+            <div class="shang_box">
+                <a class="shang_close" href="javascript:void(0)" onClick="dashangToggle()" title="关闭"><img
+                        src="/static/san/img/close.jpg"
+                        alt="取消"/></a>
+                <img class="shang_logo" src="https://wx1.sinaimg.cn/large/006gFOhdly1fr0hdrzlolj30b40b4dg7.jpg"
+                     style="width: 180px;height: 180px;" alt="ZLOE"/>
+                <div class="shang_tit">
+                    <p>感谢您的支持，我会继续努力的!</p>
+                </div>
+                <div class="shang_payimg">
+                    <img src="/static/san/img/alipayimg.jpg" alt="扫码支持" title="扫一扫"/>
+                </div>
+                <div class="pay_explain"></div>
+                <div class="shang_payselect">
+                    <div class="pay_item checked" data-id="alipay">
+                        <span class="radiobox"></span>
+                        <span class="pay_logo"><img src="/static/san/img/alipay.jpg" alt="支付宝"/></span>
+                    </div>
+                    <div class="pay_item" data-id="weipay">
+                        <span class="radiobox"></span>
+                        <span class="pay_logo"><img src="/static/san/img/wechat.jpg" alt="微信"/></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(function () {
+                $(".pay_item").click(function () {
+                    $(this).addClass('checked').siblings('.pay_item').removeClass('checked');
+                    var dataid = $(this).attr('data-id');
+                    $(".shang_payimg img").attr("src", "/static/san/img/" + dataid + "img.jpg");
+                    $("#shang_pay_txt").text(dataid == "alipay" ? "支付宝" : "微信");
+                });
+            });
+
+            function dashangToggle() {
+                $(".hide_box").fadeToggle();
+                $(".shang_box").fadeToggle();
+            }
+        </script>
+        <hr>
+        <h3 class="getliuyan" style="margin-bottom: 60px"></h3>
+        <hr>
+        <form class="liu" id="liu_yans" style="" action="" method="post">
+            {% csrf_token %}
+            <div class="contents">
+                <div>
+                    <label class="required" style="width: 100%; display: none"
+                           for="{{ form.text.id_for_label }}">文本：</label>
+                    {{ form.text }}
+                    {{ form.text.errors }}
+                </div>
+            </div>
+            <button type="button" onclick="ajax_json()" class="comment-btn"
+                    style="background-color: black;color: #ffffff">
+                发表
+            </button>
+            <form>
+                <div id="body-bottom">
+                </div>
+            </form>
+        </form>
+        <h3 style=""></h3>
+        {#    回复评论#}
+        <h3 id="comment_to_name" style="display: none">回复：<span class="comment_name"
+                                                                id="comment_name"></span>&nbsp;&nbsp;<span
+                class="comment_id" style="display: none"></span></h3>
+        <ul class="liuyan" id="comment" style="">
+        </ul>
+    </div>
+    </div>
+
+    <ol class="page-navigator">
+        <a class="btn btn-primary prev" href="{% url 'deta' s_id %}">上一篇</a>
+        <a class="btn btn-primary next" href="{% url 'deta' x_id %}">下一篇</a>
+    </ol>
+    </div>
+    <script>
+        getcomment()
+
+        /*提交留言！*/
+        function ajax_json() {
+            var data_comment = $('textarea').val()
+            if (data_comment.length >= 5) {
+                $.ajaxSetup({data: {csrfmiddlewaretoken: '{{ csrf_token }}'}});
+                $.ajax({
+                    type: 'POST',
+                    url: '/comment/{{ text.id }}',
+                    data: {
+                        'url': window.location.href,
+                        'title': $('.wen_title').text(),
+                        'head_img': $('#user_img').attr('src'),
+                        'data': filterCode(data_comment)
+                    },
+                    dataType: 'JSON',
+                    success: function (data) {
+                        console.log(data.result)
+                        if (data.result == "留言失败!") {
+                            alert("请登录后重试！")
+                        }
+                        getcomment()
+                        clocomment()
+                    }
+                })
+            } else {
+                alert("评论过短，提交失败，请大于5个字！")
+            }
+        }
+
+        /*获取留言*/
+        function getcomment() {
+            $.ajax({
+                type: 'GET',
+                url: '/get_comment/{{ text.id }}',
+                dataType: 'JSON',
+                success: function (data) {
+                    if (data.result == "没有评论！") {
+                        console.log("文章还没有评论！")
+                    } else {
+                        $('#comment').html(data.comment)
+                        console.log("刷新留言成功！")
+                    }
+
+                }
+            })
+        }
+
+        /*清空输入框*/
+        function clocomment() {
+            $('#id_text').val('')
+
+        }
+
+        /*回复留言*/
+        function hfcomment() {
+            /*获取当前点击的data-id*/
+            /*不显示留言框*/
+            document.getElementById('liu_yans').style.display = 'none'
+            $('#comment').on('click', '.id', function get_id() {
+                var box = '<div id="box" style="">\n' +
+                    '            <textarea name="text" cols="40" rows="10" required="" id="id_text" class="comment_id_text"></textarea>\n' +
+                    '            <button type="button" id="top" onclick="comment_to_comment()" class="comment-btn"\n' +
+                    '                    style="background-color: black;color: #ffffff">提交回复！\n' +
+                    '            </button>\n' +
+                    '            <button type="button" onclick="noccomment()" class="comment-btn"\n' +
+                    '                    style="background-color: black;color: #ffffff">取消回复！\n' +
+                    '            </button>\n' +
+                    '        </div>'
+                var YY = $('#box').length
+                if (YY > 0) {
+                    console.log("已经有留言框！")
+                } else {
+                    $(this).after(box)
+                    //$('html,body').animate({scrollTop: $('#box').offset().top}, 1000)
+                }
+                var comment_id = $(this).eq(0).attr('data-id')
+                var comment_name = $(this).attr('name')
+                $('.comment_name').html(comment_name)
+                if (comment_id.length != 0) {
+                    console.log("获取评论id成功! id为:", comment_id)
+                    $('.comment_id').html(comment_id)
+                } else {
+                    alert("获取评论id失败！")
+                }
+            })
+        }
+
+        /*取消回复*/
+        function noccomment() {
+            console.log("取消回复！")
+            document.getElementById('liu_yans').style.display = 'block'
+            document.getElementById('comment_to_name').style.display = 'none'
+            $('#box').remove()
+            $('.comment_id_text').val('')
+        }
+
+        /*提交回复的留言！*/
+        function comment_to_comment() {
+            var comment_text = $('.comment_id_text').val()
+            var comment_id = $('.comment_id').text()
+            var comment_name = $('.comment_name').text()
+            $.ajaxSetup({data: {csrfmiddlewaretoken: '{{ csrf_token }}'}});
+            $.ajax({
+                type: 'POST',
+                url: '/comment_to_comment/{{ text.id }}',
+                data: {
+                    'url': window.location.href,
+                    'title': $('.wen_title').text(),
+                    'head_img': $('#user_img').attr('src'),
+                    'comment_id': comment_id,
+                    'comment_text': filterCode(comment_name + ':' + comment_text)
+                },
+                dataType: 'JSON',
+                success: function (data) {
+                    getcomment()
+                    document.getElementById('liu_yans').style.display = 'block'
+                    console.log("显示评论框成功！")
+                    if (data.result == "回复失败!") {
+                        alert("请登录后重试！")
+                    } else {
+                        console.log(data.result)
+                    }
+                }
+            })
+            noccomment()
+        }
+
+        // 过滤掉非法字符
+        function filterCode(str) {
+            var reg = /\\+|\~+|\!+|\@+|\#+|¥+|\￥+|\%+|\^+|\&+|\*+|\(+|\)+|\'+|(\")+|\$+|`+|\“+|\”+|\‘+|\’+|\s+/g;
+            var res = str.replace(reg, "");
+            return res;
+        }
+    </script>
+    {% include 'base2.html' %}
+
+

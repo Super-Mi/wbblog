@@ -1,0 +1,35 @@
+<html>
+<head>
+    <title>ZLOE</title>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="//wx1.sinaimg.cn/large/006gFOhdly1fr0hdrzlolj30b40b4dg7.jpg">
+    <!-- Style -->
+    <link rel=stylesheet type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/dplayer/1.22.2/DPlayer.min.css"></link>
+    <!-- Player -->
+    <script type="text/javascript" src="https://syrme.top/static/DPlayer.min.js"></script>
+</head>
+
+<body style="background-color: #333">
+<div id="dplayer" style="max-width: 960px;height: 620px;margin: 0 auto;"></div>
+<script>
+    var u = "{{ mp4 | safe}}";
+    var n = u.search(/personal/i);
+    if (n>0){
+        var data_list = u.split("/");
+        var data_url = 'https://' + data_list[2] + '/' + data_list[5] + '/' + data_list[6] + '/' + '_layouts/download.aspx?' + data_list[7].split('?')[1] + '&share=' + data_list[7].split('?')[0];
+    }
+    else {
+        var data_url = u;
+        }
+    const dp = new DPlayer({
+        container: document.getElementById('dplayer'),
+        video: {
+            url: data_url,
+            type: 'auto',
+            thumbnails: '{{ viedo.image }}'
+        },
+
+    });
+</script>
+</body>
+</html>

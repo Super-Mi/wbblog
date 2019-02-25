@@ -1,0 +1,22 @@
+{% include 'base1.html' %}
+<div class="contents">
+            <div class="fren">
+                <h1 style="">申请链接联系我：1144620122@qq.com</h1>
+                <h1 style="">也可以自己添加：<a href="{% url 'getfrend' %}">点我</a></h1>
+            </div>
+
+            <div class="frends" style="">
+                {% for frend in frends %}
+                    <div class="frend">
+                        <a href="{{ frend.url }}" target="_blank" ><img img
+                                                       src="{{ frend.head }}"
+                                                       id='header-img'
+                                                       style="border-radius: 6.25rem;    width: 4rem; height: 4rem;}"></a>
+                        <p><h4>网站名字：{{ frend.name }}</h4></p>
+                        <p class="liutext"><h4>网站链接：{{ frend.url }}</h4>
+                        <strong>网站介绍：</strong>{{ frend.text }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+    </div>
+{% include 'base2.html' %}

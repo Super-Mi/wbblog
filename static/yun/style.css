@@ -1,0 +1,73 @@
+.header {
+    border-bottom: solid 2px #ebebeb;
+    height: 80px;
+    padding: 20px;
+    width: 70%;
+}
+
+.fontTitle {
+    float: left;
+}
+
+.rightCz {
+    float: right;
+}
+
+.rightCz li {
+    float: left;
+    margin-top: 20px;
+    margin-left: 20px;
+    font-size: 15px;
+}
+
+.fontTitle li {
+    float: left;
+    margin-top: 20px;
+    margin-left: 20px;
+    font-size: 15px;
+}
+
+.fl {
+    float: left;
+}
+
+.pan_capacity_progress-bar {
+    float: left;
+    background-color: #eeeeee;
+    height: 5px;
+    margin: 6px 6px 0 0;
+    position: relative;
+    width: 120px;
+    overflow: hidden;
+}
+
+li.cur {
+    margin-right: 20px;
+}
+
+li a {
+    color: #0099ff;
+}
+
+.ActionNavbar {
+    margin-top: 20px;
+}
+
+i.fa {
+    margin-right: 8px;
+}
+
+.Navbar {
+    margin-top: 20px;
+}
+
+.Navbar a {
+    font-size: 15px;
+}
+
+#container{
+    margin-top: 20px;
+}
+.select {
+    width: 7%;
+}

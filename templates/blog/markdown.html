@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8"/>
+    <title>ZLOE</title>
+    <link rel="shortcut icon" href="//wx1.sinaimg.cn/large/006gFOhdly1fr0hdrzlolj30b40b4dg7.jpg">
+    <link rel="stylesheet" href="/static/markdown/css/style.css"/>
+    <link rel="stylesheet" href="/static/markdown/css/editormd.css"/>
+</head>
+<body>
+{# <script type="text/javascript" color="0,0,0" opacity='0.9' zIndex="-2" count="99"#}
+{#            src="https://cdn.bootcss.com/canvas-nest.js/1.0.1/canvas-nest.js"></script>#}
+<div id="layout">
+    <header>
+        <h1 style="text-align: center;">ZLOE Markdown编辑器</h1>
+    </header>
+    <div id="test-editormd">
+
+    </div>
+</div>
+<script src="/static/markdown/js/jquery.min.js"></script>
+<script src="/static/markdown/js/editormd.min.js"></script>
+<script type="text/javascript">
+    var testEditor;
+
+    $(function () {
+        testEditor = editormd("test-editormd", {
+            width: "90%",
+            height: 640,
+            syncScrolling: "single",
+            path: "/static/markdown/lib/"
+        });
+    });
+</script>
+</body>
+</html>

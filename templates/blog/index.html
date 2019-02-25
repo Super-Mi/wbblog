@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html class="no-js">
+<head>
+    <title>ZLOE</title>
+    <meta charset="UTF-8">
+    <meta property="og:title" content="ZLOE"/>
+    <meta property="og:site_name" content="ZLOE"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:description" content="ZLOE:专注分享图片、视频、文字的分享型网站"/>
+    <meta property="og:url" content="https://zhang18.top"/>
+    <meta name="description" content="ZLOE:专注分享编程知识、视频、文字的分享型网站"/>
+    <meta name="keywords" content="ZLOE,分享,免费资源,福利网站,视频分享,编程经验"/>
+    <meta name="template" content="Mirages"/>
+    {% include 'base1.html' %}
+    {% for find in context %}
+        <article>
+            {% if find.name == 6 %}
+                <a href="{% url 'paly' find.id %}">
+            {% else %}
+                <a href="{% url 'deta' find.id %}">
+            {% endif %}
+            <div class="post-card" id="post-card-1952">
+                <div class="blog-background" data-original="{{ find.image }}" style="background-image: url({{ find.image }})"></div>
+                <div class="lazyload-container"></div>
+                <img src=""
+                     style="display: none"
+                     onload="javascript:loadBanner(this, '{{ find.image }}', '', document.querySelector('#post-card-1952'), '-1', document.querySelector('#post-card-1952').offsetWidth, document.querySelector('#post-card-1952').offsetHeight)">
+
+                <div class="post-card-mask">
+                    <div class="post-card-container">
+                        <h2 class="post-card-title" itemprop="headline"><span
+                                style='color:red'></span>{{ find.title }}</h2>
+                        <div class="post-card-info">
+                                            <span itemprop="author" itemscope
+                                                  itemprop="datePublished">时间：{{ find.input_time }}</span>
+                            <span class="label"><span class="biao">标签：{{ find.name }}</span></span>
+                            <span class="label">阅读：{{ find.views }} </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </a>
+        </article>
+    {% endfor %}
+
+    {% include 'base2.html' %}
+

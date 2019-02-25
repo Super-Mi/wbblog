@@ -1,0 +1,21 @@
+<html>
+<head>
+    <title> ZLOE </title>
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+</head>
+<body>
+<div class="login-box">
+    <img src="/static/img/avatar.png" class="avatar">
+    <h1>登录</h1>
+    <form action="{% url 'login' %}" method="POST">
+        {% csrf_token %}
+        <p>用户名</p>
+        <input type="text" name="username" placeholder="Username">
+        <p>密&nbsp&nbsp&nbsp码</p>
+        <input type="password" name="password" placeholder="Password">
+        <input type="submit" name="submit" value="登录">
+    </form>
+</div>
+
+</body>
+</html>

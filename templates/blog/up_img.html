@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ZLOE-永久图片外链工具</title>
+    <meta property="og:site_name" content="ZLOE"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:description" content="ZLOE:永久图片外链工具"/>
+    <meta property="og:url" content="https://zhang18.top/api.up_img_links"/>
+    <meta name="description" content="ZLOE:永久图片外链工具"/>
+    <meta name="keywords" content="ZLOE,永久图片外链工具"/>
+    <link rel="icon" type="image/png" href="//wx1.sinaimg.cn/large/006gFOhdly1fr0hdrzlolj30b40b4dg7.jpg">
+    <meta name="template" content="Mirages"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/upimg/style.css">
+</head>
+<body>
+
+
+<div class="container main">
+    <h1>图片上传</h1>
+    <div class="row">
+        <input id="input" type="file" name="file" class="uploadTrigger" onchange="post()" style="display:none;"
+               accept="image/jpeg, image/png"
+               multiple="">
+        <div class="col-xs-4 pull-left">
+            <p>点击下侧添加图片或者右侧使用url上传</p>
+        </div>
+        <div class="col-xs-8">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-default btn-size active" value="large" onclick="large()">原图</button>
+                <button type="button" class="btn btn-default btn-size" value="mw690" onclick="nw()">普通</button>
+
+            </div>
+        </div>
+        <div class="col-xs-4 single-model" style="display: block;">
+            <img src="/static/upimg/placeholder.png" class="dragger clicker img-fluid" id="butn">
+        </div>
+
+        <div class="col-xs-8 single-model" style="display: block;">
+            <div class="link-item">
+                <strong>使用url上传</strong>
+                <div class="input-append">
+                    <input class="res col-xs-10" id="res_url" value="">
+                    <button type="button" class="btn btn-default btn-copy" onclick="posturl()">上传</button>
+                </div>
+            </div>
+            <div class="link-item">
+                <strong>图片链接
+                </strong>
+                <div class="input-append">
+                    <input class="res col-xs-10" id="res_img" value="" spelcheck="false">
+                    <button type="button" class="btn btn-default btn-copy" data-clipboard-target="#res_img">复制</button>
+                </div>
+            </div>
+            <div class="link-item">
+                <strong>HTML</strong>
+                <div class="input-append">
+                    <input class="res col-xs-10" id="res_html" value="" spellcheck="false" readonly="true">
+                    <button type="button" class="btn btn-default btn-copy" data-clipboard-target="#res_html">复制</button>
+                </div>
+            </div>
+            <div class="link-item">
+                <strong>UBB</strong>
+                <div class="input-append">
+                    <input class="res col-xs-10" id="res_ubb" value="" spellcheck="false" readonly="true">
+                    <button type="button" class="btn btn-default btn-copy" data-clipboard-target="#res_ubb">复制</button>
+                </div>
+            </div>
+            <div class="link-item">
+                <strong>Markdown</strong>
+                <div class="input-append">
+                    <input class="res col-xs-10" id="res_md" value="" spellcheck="false" readonly="true">
+                    <button type="button" class="btn btn-default btn-copy" data-clipboard-target="#res_md">复制</button>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-xs-12 batch-model" style="display: none;">
+            <div>
+                <img src="/static/upimg/placeholder2.png" class="dragger clicker img-fluid">
+            </div>
+        </div>
+    </div>
+    {#    上传url的图片#}
+
+</div>
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+<script src="/static/upimg/clipboard-polyfill.promise.js"></script>
+<script src="https://cdn.bootcss.com/clipboard.js/2.0.4/clipboard.js"></script>
+<script>
+    /*实例化复制函数*/
+    new ClipboardJS('.btn');
+
+    $('body').on('click', '#butn', function post_img() {
+        $('#input').click();
+    });
+
+    /*生成本地的图片的表单*/
+    function post() {
+        var formData = new FormData();
+        var fileField = document.getElementById("input").files[0];
+        formData.append('imgdata', fileField);
+        formData.append('id', 1);
+        jsonresurt(formData)
+
+    }
+
+    /*生成提交url的表单*/
+    function posturl() {
+        var url = $('#res_url').val();
+        var formData = new FormData();
+        formData.append('imgdata', url)
+        formData.append('id', 2)
+        jsonresurt(formData)
+    }
+
+    /*提交表单*/
+    function jsonresurt(formData) {
+        $.ajax({
+            url: "/api.up_img_links",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            dataType: 'JSON',
+            success: function (data) {
+                if (data.result === 'ok!') {
+                    console.log('上传成功！')
+                    read_data(data)
+                } else {
+                    console.log('上传失败！')
+                }
+
+            }
+        })
+
+    }
+
+    /*处理返回的数据*/
+    function read_data(data) {
+        var img_url = 'https://ws3.sinaimg.cn/large/' + data.img_id + '.jpg'
+        var img_html = '<img src="' + img_url + '"/>';
+        var img_ubb = '[IMG]' + img_url + '[/IMG]';
+        var img_md = '![](' + img_url + ')';
+        $('#butn').attr('src', img_url)
+        $('#res_img').val(img_url);
+        $('#res_html').val(img_html);
+        $('#res_ubb').val(img_ubb);
+        $('#res_md').val(img_md);
+    }
+
+    /*处理nw660普通图片*/
+    function nw() {
+        var img_url = $('#res_img').val().replace(/large/, 'mw690');
+        var img_html = $('#res_html').val().replace(/large/, 'mw690');
+        var img_ubb = $('#res_ubb').val().replace(/large/, 'mw690');
+        var img_md = $('#res_md').val().replace(/large/, 'mw690');
+        $('#res_img').val(img_url);
+        $('#res_html').val(img_html);
+        $('#res_ubb').val(img_ubb);
+        $('#res_md').val(img_md);
+    }
+
+    function large() {
+        var img_url = $('#res_img').val().replace(/mw690/, 'large');
+        var img_html = $('#res_html').val().replace(/mw690/, 'large');
+        var img_ubb = $('#res_ubb').val().replace(/mw690/, 'large');
+        var img_md = $('#res_md').val().replace(/mw690/, 'large');
+        $('#res_img').val(img_url);
+        $('#res_html').val(img_html);
+        $('#res_ubb').val(img_ubb);
+        $('#res_md').val(img_md);
+
+    }
+
+</script>
+
+<!-- 谷歌统计代码Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-121174643-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-121174643-1');
+</script>
+<div class="footer">
+    <p style="">@2018-4-22 黔ICP备18003909号</p>
+</div>
+
+</body>
+</html>

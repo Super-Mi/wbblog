@@ -1,0 +1,607 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="shortcut icon" href="//wx1.sinaimg.cn/large/006gFOhdly1fr0hdrzlolj30b40b4dg7.jpg">
+<link rel="stylesheet" href="/static/css/mirages.css">
+<script type="text/javascript" src="/static/san/js/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/san/css/style.css">
+<script src="https://cdn.staticfile.org/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
+
+<script type="text/javascript">
+
+    window['LocalConst'] = {
+        THEME_VERSION: "1.7.6.DEV.20180520",
+        DEV_MODE: false,
+        IS_MOBILE: false,
+        IS_PHONE: false,
+        IS_TABLET: false,
+        HAS_LOGIN: false,
+        IS_HTTPS: true,
+        ENABLE_PJAX: true,
+        ENABLE_WEBP: false,
+        SHOW_TOC: false,
+        ENABLE_IMAGE_SIZE_OPTIMIZE: false,
+        THEME_COLOR: '#1abc9c',
+        DISQUS_SHORT_NAME: '',
+        COMMENT_SYSTEM: 0,
+        COMMENT_SYSTEM_DISQUS: 1,
+        COMMENT_SYSTEM_DUOSHUO: 2,
+        COMMENT_SYSTEM_EMBED: 0,
+        PJAX_LOAD_STYLE: 1,
+        PJAX_LOAD_STYLE_SIMPLE: 0,
+        PJAX_LOAD_STYLE_CIRCLE: 1,
+        AUTO_NIGHT_SHIFT: true,
+        USE_MIRAGES_DARK: false,
+        LIGHT_THEME_CLASS: "theme-white",
+        TOC_AT_LEFT: false,
+        SERIF_LOAD_NOTICE: '加载 Serif 字体可能需要 10 秒钟左右，请耐心等待',
+        ROOT_FONT_SIZE: '100',
+        BIAOQING_PAOPAO_PATH: '',
+        BIAOQING_ARU_PATH: '',
+        CDN_TYPE_OTHERS: -1,
+        CDN_TYPE_QINIU: 1,
+        CDN_TYPE_UPYUN: 2,
+        CDN_TYPE_LOCAL: 3,
+        CDN_TYPE_ALIYUN_OSS: 4,
+        KEY_CDN_TYPE: '',
+        UPYUN_SPLIT_TAG: '!',
+        COMMENTS_ORDER: 'ASC',
+        ENABLE_FLOW_CHART: false,
+        TYPEKIT_CONFIG: {
+            kitId: '',
+            scriptTimeout: 3000,
+            async: true
+        }
+    };
+    var Mlog = function (message) {
+        if (LocalConst.DEV_MODE) {
+            console.log(message);
+        }
+    };
+
+    var BIAOQING_PAOPAO_PATH = LocalConst.BIAOQING_PAOPAO_PATH;
+    var BIAOQING_ARU_PATH = LocalConst.BIAOQING_ARU_PATH;
+    LocalConst.KEY_CDN_TYPE = 'mirages-cdn-type';
+    LocalConst.UPYUN_SPLIT_TAG = '!';
+</script>
+
+{#        <script>#}
+{#            var hour = new Date().getHours();#}
+{#            if (hour <= 5 || hour >= 23) {#}
+{#                LocalConst.USE_MIRAGES_DARK = true;#}
+{#            }#}
+{#        </script>#}
+
+
+<script type="text/javascript">
+    var autoHideElements = {};
+    var CSS = function (css) {
+        var link = document.createElement('link');
+        link.setAttribute('rel', 'stylesheet');
+        link.href = css;
+        document.head.appendChild(link);
+    };
+    var STYLE = function (style, type) {
+        type = type || 'text/css';
+        var s = document.createElement('style');
+        s.type = type;
+        s.textContent = style;
+        document.head.appendChild(s);
+    };
+    var JS = function (js, async) {
+        async = async || false;
+        var sc = document.createElement('script'), s = document.scripts[0];
+        sc.src = js;
+        sc.async = async;
+        s.parentNode.insertBefore(sc, s);
+    };
+    var registAutoHideElement = function (selector) {
+        var tmp = autoHideElements[selector];
+        if (typeof (tmp) !== 'undefined') {
+            return;
+        }
+        var element = document.querySelector(selector);
+        if (element && typeof (Headroom) !== "undefined") {
+            var headroom = new Headroom(element, {
+                tolerance: 5,
+                offset: 5,
+                classes: {
+                    initial: "show",
+                    pinned: "show",
+                    unpinned: "hide"
+                }
+            });
+            headroom.init();
+            autoHideElements[selector] = headroom;
+        }
+    };
+    var getImageAddon = function (cdnType, width, height) {
+        if (!LocalConst.ENABLE_IMAGE_SIZE_OPTIMIZE) {
+            return "";
+        }
+        var addon = "?";
+        if (cdnType == LocalConst.CDN_TYPE_UPYUN) {
+            addon = LocalConst.UPYUN_SPLIT_TAG;
+        }
+        var ratio = window.devicePixelRatio || 1;
+        width = width || window.innerWidth;
+        height = height || window.innerHeight;
+        width = width || 0;
+        height = height || 0;
+        if (width == 0 && height == 0) {
+            return "";
+        }
+        var format = "";
+        if (LocalConst.ENABLE_WEBP) {
+            if (cdnType == LocalConst.CDN_TYPE_ALIYUN_OSS) {
+                format = "/format,webp"
+            } else {
+                format = "/format/webp";
+            }
+        }
+        if (width >= height) {
+            if (cdnType == LocalConst.CDN_TYPE_UPYUN) {
+                addon += "/fw/" + parseInt(width * ratio) + "/quality/75" + format;
+            } else if (cdnType == LocalConst.CDN_TYPE_ALIYUN_OSS) {
+                addon += "x-oss-process=image/resize,w_" + parseInt(width * ratio) + "/quality,Q_75" + format;
+            } else {
+                addon += "imageView2/2/w/" + parseInt(width * ratio) + "/q/75" + format;
+            }
+        } else {
+            if (cdnType == LocalConst.CDN_TYPE_UPYUN) {
+                addon += "/fh/" + parseInt(width * ratio) + "/quality/75" + format;
+            } else if (cdnType == LocalConst.CDN_TYPE_ALIYUN_OSS) {
+                addon += "x-oss-process=image/resize,h_" + parseInt(width * ratio) + "/quality,Q_75" + format;
+            } else {
+                addon += "imageView2/2/h/" + parseInt(height * ratio) + "/q/75" + format;
+            }
+        }
+        return addon;
+    };
+    var getBgHeight = function (windowHeight, bannerHeight, mobileBannerHeight) {
+        windowHeight = windowHeight || 560;
+        if (windowHeight > window.screen.availHeight) {
+            windowHeight = window.screen.availHeight;
+        }
+        bannerHeight = bannerHeight.trim();
+        mobileBannerHeight = mobileBannerHeight.trim();
+        if (window.innerHeight > window.innerWidth) {
+            bannerHeight = parseFloat(mobileBannerHeight);
+        } else {
+            bannerHeight = parseFloat(bannerHeight);
+        }
+        bannerHeight = Math.round(windowHeight * bannerHeight / 100);
+        return bannerHeight;
+    };
+    var registLoadBanner = function () {
+        if (window.asyncBannerLoadNum >= 0) {
+            window.asyncBannerLoadNum++;
+            Mlog("Loading Banner..." + window.asyncBannerLoadNum);
+        }
+    };
+    var loadBanner = function (img, backgroundImage, backgroundPosition, wrap, cdnType, width, height) {
+        var background = wrap.querySelector('.blog-background');
+        var container = wrap.querySelector('.lazyload-container');
+
+        var imageSrc = backgroundImage + getImageAddon(cdnType, width, height);
+
+        background.classList.add("loading");
+
+        img.remove();
+        if (typeof (backgroundPosition) === 'string' && backgroundPosition.length > 0) {
+            container.style.backgroundPosition = backgroundPosition;
+            background.style.backgroundPosition = backgroundPosition;
+        }
+        container.style.backgroundImage = 'url(' + img.src + ')';
+        container.classList.add('loaded');
+
+        // load Src background image
+        var largeImage = new Image();
+        largeImage.src = imageSrc;
+        largeImage.onload = function () {
+            this.remove();
+            background.style.backgroundImage = 'url(' + imageSrc + ')';
+            background.classList.remove('loading');
+            container.classList.remove('loaded');
+            setTimeout(function () {
+                container.remove();
+                if (window.asyncBannerLoadCompleteNum >= 0) {
+                    window.asyncBannerLoadCompleteNum++;
+                    Mlog("Loaded Banner: " + window.asyncBannerLoadCompleteNum);
+                    if (window.asyncBannerLoadCompleteNum === window.asyncBannerLoadNum) {
+                        window.asyncBannerLoadNum = -1170;
+                        window.asyncBannerLoadCompleteNum = -1170;
+                        $('body').trigger("ajax-banner:done");
+                    }
+                }
+            }, 1001);
+        };
+    };
+</script>
+<style type="text/css">
+    body, button, input, optgroup, select, textarea,
+    body.serif-fonts .post-content h1, body.serif-fonts .comment-content h1,
+    body.serif-fonts .post-content h2, body.serif-fonts .comment-content h2,
+    body.serif-fonts .post-content h3, body.serif-fonts .comment-content h3,
+    body.serif-fonts .post-content h4, body.serif-fonts .comment-content h4,
+    body.serif-fonts .post-content h5, body.serif-fonts .comment-content h5,
+    body.serif-fonts .post-content h6, body.serif-fonts .comment-content h6 {
+        font-family: 'Mirages Custom', 'Merriweather', 'Open Sans', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft Yahei', 'WenQuanYi Micro Hei', 'Segoe UI Emoji', 'Segoe UI Symbol', Helvetica, Arial, sans-serif;
+    }
+
+    .github-box, .github-box .github-box-title h3 {
+        font-family: 'Mirages Custom', 'Merriweather', 'Open Sans', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft Yahei', 'WenQuanYi Micro Hei', 'Segoe UI Emoji', 'Segoe UI Symbol', Helvetica, Arial, sans-serif !important;
+    }
+
+    .aplayer {
+        font-family: 'Mirages Custom', 'Myriad Pro', 'Myriad Set Pro', 'Open Sans', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft Yahei', 'WenQuanYi Micro Hei', Helvetica, arial, sans-serif !important;
+    }
+
+    body.content-lang-en.content-serif .post-content {
+        font-family: 'Lora', 'PT Serif', 'Source Serif Pro', Georgia, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft Yahei', 'WenQuanYi Micro Hei', serif;
+    }
+
+    /* Serif */
+    body.serif-fonts .post-content {
+        font-family: 'Noto Serif CJK SC', 'Noto Serif CJK', 'Source Han Serif SC', 'Source Han Serif', 'source-han-serif-sc', 'PT Serif', 'SongTi SC', 'MicroSoft Yahei', Georgia, serif;
+    }
+
+    p {
+        color: black;
+    }
+
+    li a {
+        color: rgb(88, 110, 105);
+    }
+</style>
+
+<script>
+    var _czc = _czc || [];
+    var _hmt = _hmt || [];
+</script>
+</head>
+<body class="theme-white color-default code-dark card  desktop windows chrome not-safari wrap-code">
+<script>
+    if (LocalConst.USE_MIRAGES_DARK) {
+        var body = document.querySelector("body");
+        body.classList.remove('theme-white');
+        body.classList.add('theme-dark');
+    }
+</script>
+{#输入框特效#}
+<script src="/static/js/activate-power-mode.js"></script>
+<script>
+    POWERMODE.colorful = true; // ture 为启用礼花特效
+    POWERMODE.shake = false; // false 为禁用震动特效
+    document.body.addEventListener('input', POWERMODE);
+</script>
+
+<div class="sp-progress"></div>
+<div id="wrap">
+    <span id="backtop" class="waves-effect waves-button"><i class="fa fa-angle-up"></i></span>
+    <a id="toggle-nav" class="btn btn-primary" href="javascript:void(0);"><span>MENU</span></a>
+    <nav id="site-navigation" class="navbar no-user-select" role="navigation">
+        <div id="nav">
+            <div class="author navbar-header">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'user' user.id %}">
+                {% else %}
+                    <a href="">
+                {% endif %}
+                <img id="user_img" src="{{ header }}" alt="Avatar" width="100" height="100"/>
+                </a>
+            </div>
+            <div class="search-box navbar-header">
+                <form class="form" id="search-form" action="{% url 'search' %}">
+                    <input id="search" type="text" name="q" required placeholder="搜索..." class="search">
+                    <button id="search_btn" type="submit" class="search-btn"><i class="fa fa-search"></i></button>
+                </form>
+            </div>
+            <ul id="menu-menu-1" class="menu navbar-nav">
+                <li class="menu-item"><a href="{% url 'index' %}">首页</a></li>
+                <li class="menu-item"><a class="django" href="{% url 'django' 1 %}">django</a></li>
+                <li class="menu-item"><a class="flask学习" href="{% url 'flask' 2 %}">flask学习</a></li>
+                <li class="menu-item"><a class="爬虫教程" href="{% url 'pa' 3 %}">爬虫教程</a></li>
+                <li class="menu-item"><a class="编程项目" href="{% url 'fu' 4 %}">编程项目</a></li>
+                <li class="menu-item"><a class="生活推荐" href="{% url 'huo' 5 %}">生活推荐</a></li>
+                <li class="menu-item"><a class="视频推荐" href="{% url 'video' 6 %}">视频分享</a></li>
+                <li class="menu-item"><a class="文章" href="{% url 'hui' %}">文章汇总</a></li>
+                <li>
+                    <a class="slide-toggle">工具娱乐</a>
+                    <div class="category-list hide">
+                        <ul class="list">
+                            <li class="category-level-0 category-parent" style=""><a href="{% url 'music' %}">听音乐</a>
+                            </li>
+                            <li class="category-level-0 category-parent" style=""><a href="{% url 'dou' %}">吃豆人</a>
+                            </li>
+                            <li class="category-level-0 category-parent" style=""><a href="{% url 'wuzi' %}">五子棋</a>
+                            </li>
+                            <li class="category-level-0 category-parent" style=""><a
+                                    href="javascript:var%20KICKASSVERSION='2.0'; var%20s%20=%20document.createElement('script'); s.type='text/javascript'; document.body.appendChild(s); s.src='//hi.kickassapp.com/kickass.js'; void(0);">摧毁网页</a>
+                            </li>
+                            <li class="category-level-0 category-parent" style=""><a href="{% url 'markdown' %}">markdown</a>
+                            </li>
+                            <li class="category-level-0 category-parent" style=""><a href="{% url 'curl' %}">cURL爬虫</a>
+                            </li>
+                            <li class="category-level-0 category-parent" style=""><a href="{% url 'one_links' %}">OneDeive外链</a>
+                            </li>
+                            <li class="category-level-0 category-parent" style=""><a href="{% url 'douyin' %}">抖音去水印</a>
+                            </li>
+                            <li class="category-level-0 category-parent" style=""><a href="{% url 'jian' %}">简历生成</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="menu-item"><a class="友链" href="{% url 'frend' %}">友情链接</a></li>
+
+                <div class="category-list">
+                    <ul class="list">
+                        {% if user.is_authenticated %}
+                            <li class="category-level-0 category-parent"><a
+                                    href="{% url 'user' user.id %}">{{ user.username }}</a></li>
+                            <li class="category-level-1 category-parent"><a style="position:relative;top:-24px;"
+                                                                            href="{% url 'logout' %}">退出</a></li>
+                        {% else %}
+                            <li class="category-level-0 category-parent"><a href="{% url 'register' %}">注册</a></li>
+                            <li class="category-level-1 category-parent"><a style="position:relative;top:-24px;"
+                                                                            href="{% url 'login' %}">登录</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </ul>
+        </div>
+        <div id="nav-toolbar">
+            <div class="side-toolbar">
+                <ul class="side-toolbar-list">
+                    <li><a id="side-toolbar-read-settings" href="javascript:void(0);" title="阅读设置"><i
+                            class="fa fa-font"></i></a></li>
+                    <li><a id="side-toolbar-read-setting"
+                           href="https://www.zhihu.com/people/zhang-guan-ping-53-39/activities" title="知乎"><i
+                            class="fa fa-font"></i></a></li>
+                    <li><a id="side-toolbar-read-settings" href="https://github.com/msterzhang" title="Github"><i
+                            class="fa fa-font"></i></a></li>
+                </ul>
+                <div class="read-settings-container animated">
+                    <div class="read-settings animated">
+                        <div class="font-size-controls animated">
+                            <button type="button"
+                                    class="font-size-control control-btn-smaller waves-effect waves-button"
+                                    data-mode="smaller">A
+                            </button>
+                            <button type="button" class="font-size-control control-btn-larger waves-effect waves-button"
+                                    data-mode="larger">A
+                            </button>
+                            {#                            <button type="button" class="" disabled id="font-size-display">100%</button>#}
+                            <button type="button" class="font-size-control control-btn-larger waves-effect waves-button"
+                                    data-mode="larger">A
+                            </button>
+                        </div>
+                        <div class="background-color-controls animated">
+                            <ul>
+                                <li><a href="javascript:void(0)" title="自动模式"
+                                       class="background-color-control auto selected" data-mode="auto"><i
+                                        class="fa fa-adjust"></i></a></li>
+                                <li><a href="javascript:void(0)" title="日间模式" class="background-color-control white "
+                                       data-mode="white"><i class="fa fa-check-circle"></i></a></li>
+                                <li><a href="javascript:void(0)" title="日落模式" class="background-color-control sunset "
+                                       data-mode="sunset"><i class="fa fa-check-circle"></i></a></li>
+                                <li><a href="javascript:void(0)" title="夜间模式" class="background-color-control dark "
+                                       data-mode="dark"><i class="fa fa-check-circle"></i></a></li>
+                            </ul>
+                        </div>
+                        <div class="font-family-controls">
+                            <button type="button" class="font-family-control selected control-btn-sans-serif"
+                                    data-mode="sans-serif">Sans Serif
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div id="body">
+        <style type="text/css">
+            /** 页面样式调整 */
+            @media (max-width: 47.938rem) {
+                body.card #index, body.card #archive {
+                    padding: 4rem 3rem 3.5rem;
+                }
+
+                body.card .container {
+                    max-width: 44.375rem;
+                }
+
+                body.card #index article, body.card #archive article {
+                    padding: .9375rem 0 1.25rem;
+                }
+
+                body.card #index article .post-card-mask, body.card #archive article .post-card-mask {
+                    height: 12.5rem;
+                }
+
+                body.card #index article .post-card-container, body.card #archive article .post-card-container {
+                    padding: 1rem 1rem;
+                }
+
+                .page-navigator {
+                    margin-top: 2rem;
+                }
+            }
+
+            @media (max-width: 21rem) {
+                body.card #index article .post-card-mask, body.card #archive article .post-card-mask {
+                    height: 10.5rem;
+                }
+
+                a.btn, .btn > a {
+                    padding: .4375rem 2.25rem;
+                }
+
+                .page-navigator {
+                    margin-top: 1.5rem;
+                }
+            }
+
+            @media screen and (min-width: 48rem) and (max-width: 81.3125rem) {
+                body.card .container {
+                {#改过 46#} max-width: 50rem;
+                }
+            }
+
+            @media screen and (min-width: 81.32rem) and (max-width: 99.9375rem) {
+                body.card .container {
+                    max-width: 54rem;
+                }
+            }
+
+            @media screen and (min-width: 100rem) and (max-width: 112.4375rem) {
+                body.card .container {
+                    max-width: 56rem;
+                }
+            }
+
+            @media screen and (min-width: 112.5rem) and (max-width: 124.9375rem) {
+                body.card .container {
+                    max-width: 60rem;
+                }
+            }
+
+            @media screen and (min-width: 125rem) and (max-width: 149.9375rem) {
+                body.card .container {
+                    max-width: 62rem;
+                }
+            }
+
+            @media screen and (min-width: 150rem) {
+                body.card .container {
+                    max-width: 64rem;
+                }
+            }
+
+            #masthead::after {
+                content: '';
+                width: 150%;
+                height: 4.375rem;
+                background: #fff;
+                left: -25%;
+                bottom: -1.875rem;
+                border-radius: 100%;
+                position: absolute;
+                z-index: -1;
+            }
+
+            .inner::after {
+                content: '';
+                width: 150%;
+                height: 4.375rem;
+                background-color: #fff;
+                left: -25%;
+                bottom: -1.875rem;
+                border-radius: 100%;
+                position: absolute;
+            }
+
+            @media screen and (max-width: 25rem) {
+                #masthead::after, .inner::after {
+                    width: 250%;
+                    left: -75%;
+                    bottom: -3.875rem;
+                }
+            }
+
+            @media screen and (min-width: 25.0625rem) and (max-width: 37.4375rem) {
+                #masthead::after, .inner::after {
+                    width: 200%;
+                    left: -50%;
+                    bottom: -2.875rem;
+                }
+            }
+
+            body.theme-dark #masthead {
+                box-shadow: none;
+                -webkit-box-shadow: none;
+            }
+
+            body.theme-dark #masthead::after {
+                background-color: #2c2a2a;
+            }
+
+            body.theme-dark .inner::after {
+                background-color: #2c2a2a;
+            }
+
+            body.theme-sunset .inner::after, body.theme-sunset #masthead::after {
+                background-color: #F8F1E4;
+            }
+
+            #post article {
+                margin-top: -0.625rem;
+            }
+
+            #index {
+                padding-top: 0.375rem;
+            }
+
+            #qr-box {
+                background-color: transparent;
+            }
+
+            .post-buttons, #qr-box {
+                display: none;
+            }
+
+            #body-bottom {
+                margin-top: 0;
+            }
+
+            .inner {
+                background-color: rgba(0, 0, 0, 0.25);
+            }
+
+            #masthead {
+                min-height: 12.5rem;
+            }
+
+            img {
+                width: auto;
+                height: auto;
+            }
+        </style>
+
+        <script type="text/javascript">
+            var wrap = document.querySelector('#wrap');
+            wrap.classList.remove('display-menu-tree');
+            var body = document.querySelector('body');
+            body.classList.remove('display-menu-tree');
+            LocalConst.TOC_AT_LEFT = false;
+
+            if (body.classList.contains('content-lang-en')) {
+                body.classList.remove('content-lang-en');
+            }
+            if (body.classList.contains('content-serif')) {
+                body.classList.remove('content-serif');
+            }
+            LocalConst.SHOW_TOC = false;
+        </script>
+        <header id="masthead" class="align-center align-middle " style="
+            height:
+        68px;">
+            <div class="blog-background"></div>
+            <script type="text/javascript">
+                var head = document.querySelector("#masthead");
+                var bgHeight = getBgHeight(window.innerHeight, '68', '50');
+                head.style.height = bgHeight + "px";
+                var banner = '{{ header_img }}' + getImageAddon("-1", window.screen.availWidth, window.screen.availHeight);
+                head.querySelector(".blog-background").style.backgroundImage = 'url(' + banner + ')';
+            </script>
+            <div class="inner">
+                <div class="container">
+                    <h1 class="blog-title" style=""></h1>
+                    <h2 class="blog-description" style=""></h2>
+                </div>
+            </div>
+        </header>
+        <div class="container">
+            <div class="row">
+                <div id="index" role="main">
+
+
